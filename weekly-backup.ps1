@@ -20,7 +20,7 @@ $backupDestinationFolder = Join-Path -Path $backupDestinationFolder -ChildPath $
 New-Item -ItemType Directory -Path $backupDestinationFolder -ErrorAction SilentlyContinue
 
 # Run the wbadmin backup command
-$backupResult = Start-Process -FilePath wbadmin -ArgumentList "start backup -backupTarget:`"$backupDestinationFolder`" -include:$($serverBackupItems -join ',') -vssCopy -quiet" -Wait -PassThru
+$backupResult = Start-Process -FilePath wbadmin -ArgumentList "start backup -backupTarget:`"$backupDestinationFolder`" -include:$($serverBackupItems -join ',') -allCritical -quiet" -Wait -PassThru
 
 # Check if the backup was successful
 if ($backupResult.ExitCode -eq 0) {
