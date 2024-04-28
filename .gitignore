@@ -1,0 +1,62 @@
+# Visual Studio Code
+.vscode/
+
+# Visual Studio
+*.suo
+*.user
+*.sln.docstates
+*.userprefs
+*.vscode/
+*.vssscc
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.tlb
+*.tlh
+*.bak
+*.cache
+*.ilk
+*.log
+*.dll
+*.exe
+*.pdb
+*.ipch
+*.lib
+*.obj
+*.pch
+*.res
+*.idb
+*.manifest
+*.exp
+*.aps
+*.aps
+*.aps
+*.sbr
+*.sdf
+*.scc
+*.tlh
+*.tlb
+*.psess
+*.vsp
+*.vspx
+*.user
+*.vuser
+*.ntvs*
+*.temp
+*.log
+*.rptproj.user
+
+# Rider
+.idea/
+
+# Resharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# Test files
+*.testsettings
+*.vsmdi
+*.testsettings
