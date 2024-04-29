@@ -15,9 +15,10 @@ if (-not (Test-Path $backupDestinationFolder)) {
 # Get the current date and time
 $timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
 
+# Doesn't work with powershell
 # Create the backup folder with timestamp
 $backupDestinationFolder = Join-Path -Path $backupDestinationFolder -ChildPath $timestamp
-New-Item -ItemType Directory -Path $backupDestinationFolder -ErrorAction SilentlyContinue
+# New-Item -ItemType Directory -Path $backupDestinationFolder -ErrorAction SilentlyContinue
 
 # Run the wbadmin backup command
 $backupResult = Start-Process -FilePath wbadmin -ArgumentList "start backup -backupTarget:`"$backupDestinationFolder`" -include:$($serverBackupItems -join ',') -vssCopy -quiet" -Wait -PassThru

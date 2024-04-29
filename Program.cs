@@ -13,6 +13,7 @@ internal class Program
         {
             var networkPath = args[0];
             var encryptedFileName = args[1];
+            var serverBackupItems = args[3];
             var folderName = DateTime.Now.ToString("yyyy-MM-dd_HHmmss");
 
             // Load encrypted data from file
@@ -43,6 +44,8 @@ internal class Program
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
             CreateDirectory(config.Username, config.Password, networkPath, folderName);
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
+
+            ExecuteBackup(Path.Join(networkPath, folderName), serverBackupItems);
         }
         catch (CryptographicException e)
         {
