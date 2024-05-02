@@ -42,9 +42,29 @@ internal class Program
 
             // Create Directory for Backup
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
-            CreateDirectory(config.Username, config.Password, networkPath, folderName);
+            try
+            {
+                // Try this first
+                CreateDirectory2(config.Username, config.Password, networkPath, folderName);
+            }
+            catch (System.Exception ex)
+            {
+                // First try failed. Log and move on
+                Console.Write(ex.Message);
+                try
+                {
+                    // Then try this
+                    CreateDirectory(config.Username, config.Password, networkPath, folderName);
+                }
+                catch (System.Exception exx)
+                {
+                    Console.WriteLine(exx);
+                }
+            }
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
 
+
+            // Start backup
             ExecuteBackup(Path.Join(networkPath, folderName), serverBackupItems);
         }
         catch (CryptographicException e)
@@ -93,19 +113,54 @@ internal class Program
 
     static void CreateDirectory(string username, string password, string networkPath, string folderName)
     {
+        // // Create a network credential object
+        // NetworkCredential credentials = new NetworkCredential(username, password);
+
+        // // Create a credential cache and add the network credentials
+        // CredentialCache networkCredentialCache = new CredentialCache();
+        // networkCredentialCache.Add(new Uri(networkPath), "Basic", credentials);
+
+        // // Set the default network credentials to the credential cache
+        // WebRequest.DefaultWebProxy.Credentials = networkCredentialCache;
+
+        // // Create the directory using the network path
+        // Directory.CreateDirectory(Path.Combine(networkPath, folderName));
+        // Console.WriteLine("Folder created successfully.");
         // Create a network credential object
         NetworkCredential credentials = new NetworkCredential(username, password);
+        var directoryPath = Path.Combine(networkPath, folderName);
 
-        // Create a credential cache and add the network credentials
-        CredentialCache networkCredentialCache = new CredentialCache();
-        networkCredentialCache.Add(new Uri(networkPath), "Basic", credentials);
+        // Create the directory using the network path and credentials
+        using (new NetworkConnection(networkPath, credentials))
+        {
+            // Ensure the directory exists
+            Directory.CreateDirectory(directoryPath);
+            Console.WriteLine("Folder created successfully.");
+        }
+    }
 
-        // Set the default network credentials to the credential cache
-        WebRequest.DefaultWebProxy.Credentials = networkCredentialCache;
+    static void CreateDirectory2(string username, string password, string networkPath, string folderName)
+    {
+        // Network credentials
+        NetworkCredential networkCredential = new NetworkCredential(username, password);
 
-        // Create the directory using the network path
-        Directory.CreateDirectory(Path.Combine(networkPath, folderName));
-        Console.WriteLine("Folder created successfully.");
+        string directoryPath = Path.Combine(networkPath, folderName);
+
+        try
+        {
+            // Provide credentials for accessing the network location
+            CredentialCache credentialCache = new CredentialCache();
+            credentialCache.Add(new Uri(networkPath), "Basic", networkCredential);
+
+            // Create the directory
+            Directory.CreateDirectory(directoryPath);
+
+            Console.WriteLine($"Directory '{directoryPath}' created successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error creating directory: {ex.Message}");
+        }
     }
 
     static void ExecuteBackup(string backupDestinationFolder, string serverBackupItems)
